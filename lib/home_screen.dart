@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:water_tracker/water_consume.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,11 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 15,),
 
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('History', style: TextStyle(color: Color(0xff7469B6))),
-                Text('Total Glass', style: TextStyle(color: Color(0xff7469B6)))
+                const Text('History', style: TextStyle(color: Color(0xff7469B6))),
+                Text('Total Glass ${_getTotalWaterConsumeCount.totalGlass}', style: const TextStyle(color: Color(0xff7469B6)))
               ],
             ),
 
@@ -77,7 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: waterConsumeList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text((waterConsumeList[index].date).toString()),
+                      // title: Text((waterConsumeList[index].date).toString()),
+                      title: Text(
+                          (DateFormat.yMEd().add_jms().format(DateTime.now()))
+                              .toString()),
                       leading: CircleAvatar(
                         backgroundColor: const Color(0xff7469B6),
                         foregroundColor: Colors.white,
@@ -95,10 +99,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  int _getTotalWaterConsumeCount() {
+    int totalGlass = 0;
+    for (WaterConsume waterConsume in waterConsumeList) {
+      totalGlass += waterConsume.waterGlasses;
+    }
+    return totalGlass;
+  }
+
   void _tapButton() {
     int glassCount = int.tryParse(_glassNumberTEController.text) ?? 1;
     WaterConsume waterConsume =
-        WaterConsume(date: DateTime.now(), waterGlasses: glassCount);
+    WaterConsume(date: DateTime.now(), waterGlasses: glassCount);
     waterConsumeList.add(waterConsume);
     setState(() {});
   }
