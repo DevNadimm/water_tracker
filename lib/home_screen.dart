@@ -9,8 +9,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _glassNumberTEController = TextEditingController();
-
+  final TextEditingController _glassNumberTEController =
+      TextEditingController();
   List<WaterConsume> waterConsumeList = [];
 
   @override
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: (){},
+                    onTap:  _tapButton ,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
@@ -50,36 +50,56 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 15,),
 
-                  const SizedBox(
+                  SizedBox(
                     width: 60,
                     child: TextField(
+                      controller: _glassNumberTEController,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
-                      ),
                     ),
+                  ),
                 ],
               ),
             ),
 
             const SizedBox(height: 15,),
-            
+
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('History',style: TextStyle(color: Color(0xff7469B6))),
-                Text('Total Glass',style: TextStyle(color: Color(0xff7469B6)))
+                Text('History', style: TextStyle(color: Color(0xff7469B6))),
+                Text('Total Glass', style: TextStyle(color: Color(0xff7469B6)))
               ],
             ),
 
-            Expanded(child: ListView.builder(
-              itemCount: 25,
-                itemBuilder: (context, index){
+            Expanded(
+              child: ListView.builder(
+                  itemCount: waterConsumeList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text((waterConsumeList[index].date).toString()),
+                      leading: CircleAvatar(
+                        backgroundColor: const Color(0xff7469B6),
+                        foregroundColor: Colors.white,
+                        child: Text('${index + 1}'),
+                      ),
+                      trailing: Text(
+                          (waterConsumeList[index].waterGlasses).toString()),
+                    );
+                  }),
+            ),
 
-                })
-            )
           ],
         ),
       ),
     );
+  }
+
+  void _tapButton() {
+    int glassCount = int.tryParse(_glassNumberTEController.text) ?? 1;
+    WaterConsume waterConsume =
+        WaterConsume(date: DateTime.now(), waterGlasses: glassCount);
+    waterConsumeList.add(waterConsume);
+    setState(() {});
   }
 }
