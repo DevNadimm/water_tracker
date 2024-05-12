@@ -59,7 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 15),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -67,6 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text('Total Glass ${_getTotalWaterConsumeCount()}', style: const TextStyle(color: Color(0xff7469B6))),
               ],
             ),
+
+            const SizedBox(height: 15),
+
             Expanded(
               child: ListView.builder(
                 itemCount: waterConsumeList.length,
@@ -78,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       foregroundColor: Colors.white,
                       child: Text('${index + 1}'),
                     ),
-                    trailing: Text((waterConsumeList[index].waterGlasses).toString()),
+                    trailing: Text((waterConsumeList[index].waterGlasses).toString(),style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w500),),
                   );
                 },
               ),
