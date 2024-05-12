@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:water_tracker/water_consume.dart';
 import 'package:intl/intl.dart';
+import 'package:water_tracker/water_consume.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,102 +10,136 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _glassNumberTEController =
-  TextEditingController();
+
+  final TextEditingController _waterGlassTEController = TextEditingController();
+
   List<WaterConsume> waterConsumeList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Water Tracker', style: TextStyle(fontWeight: FontWeight.w500)),
+        title: const Text('Water Tracker'),
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
+                  const SizedBox(
+                    height: 15,
+                  ),
+
                   GestureDetector(
-                    onTap: _tapButton,
+                    onTap: _button,
                     child: Container(
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(width: 10, color: const Color(0xffAD88C6)),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(18.0),
+                          color: Colors.red,
+                          boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset: const Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
+                          borderRadius: BorderRadius.circular(100)),
+                      child: const Center(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.water_drop_outlined, size: 40, color: Color(0xff7469B6)),
-                            Text('Tap Here', style: TextStyle(color: Color(0xff7469B6), fontWeight: FontWeight.w500)),
+                            Icon(
+                              Icons.water_drop_outlined,
+                              size: 35,color: Colors.white,
+                            ),
+                            Text(
+                              'Tap Here',style: TextStyle(color: Colors.white),
+                            )
                           ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+
                   SizedBox(
-                    width: 60,
+                    width: 100,
                     child: TextField(
-                      controller: _glassNumberTEController,
-                      keyboardType: TextInputType.number,
+                      style: const TextStyle(fontSize: 17),
+                      controller: _waterGlassTEController,
+                      decoration: const InputDecoration(
+                        hintText: 'Glass Number',
+                        hintStyle: TextStyle(fontSize: 15,color: Colors.grey)
+                      ),
                       textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(
+              height: 15,
+            ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('History', style: TextStyle(color: Color(0xff7469B6))),
-                Text('Total Glass ${_getTotalWaterConsumeCount()}', style: const TextStyle(color: Color(0xff7469B6))),
+                const Text('History',style: TextStyle(color: Colors.black),),
+                Text('Total Glasses: ${_getTotalGlasses()}',style: const TextStyle(color: Colors.black),),
               ],
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(
+              height: 15,
+            ),
 
             Expanded(
               child: ListView.builder(
                 itemCount: waterConsumeList.length,
-                itemBuilder: (context, index) {
+                  itemBuilder: (context , index){
                   return ListTile(
-                    title: Text((DateFormat.yMEd().add_jms().format(DateTime.now())).toString()),
+                    title: Text(DateFormat.yMEd().add_jms().format(waterConsumeList[index].time)),
                     leading: CircleAvatar(
-                      backgroundColor: const Color(0xff7469B6),
+                      backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      child: Text('${index + 1}'),
+                      child: Text('${index+1}'),
                     ),
-                    trailing: Text((waterConsumeList[index].waterGlasses).toString(),style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w500),),
-                  );
-                },
-              ),
-            ),
+                    trailing: Text(
+                        waterConsumeList[index].glassCount.toString(),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    );
+                }),
+            )
           ],
         ),
       ),
     );
   }
 
-  int _getTotalWaterConsumeCount() {
-    int totalGlass = 0;
-    for (WaterConsume waterConsume in waterConsumeList) {
-      totalGlass += waterConsume.waterGlasses;
+  _getTotalGlasses(){
+    int totalGlasses = 0;
+    for(WaterConsume waterConsume in waterConsumeList){
+      totalGlasses += waterConsume.glassCount ;
     }
-    return totalGlass;
+    return totalGlasses;
   }
 
-  void _tapButton() {
-    int glassCount = int.tryParse(_glassNumberTEController.text) ?? 1;
-    WaterConsume waterConsume = WaterConsume(date: DateTime.now(), waterGlasses: glassCount);
-    waterConsumeList.add(waterConsume);
-    setState(() {});
+  _button(){
+    int glassCount = int.tryParse(_waterGlassTEController.text) ?? 01;
+    // WaterConsume(time: DateTime.now(), glassCount: glassCount);
+    waterConsumeList.add(WaterConsume(time: DateTime.now(), glassCount: glassCount));
+    setState(() {  });
   }
+
 }

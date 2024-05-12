@@ -1,6 +1,6 @@
 class WaterConsume {
-  final DateTime date;
-  final int waterGlasses;
+  final DateTime time  ;
+  final int glassCount;
 
-  WaterConsume({required this.date, required this.waterGlasses});
+  WaterConsume({required this.time, required this.glassCount});
 }
